@@ -17,6 +17,7 @@ namespace VendasPadaria.Data
 
         public DbSet<VendasPadaria.Models.ClienteRegistrado> ClienteRegistrado { get; set; } = default!;
         public DbSet<VendasPadaria.Models.Produto> Produto { get; set; } = default!;
-        public DbSet<VendasPadaria.Models.Venda> Vendas { get; set; } = default!;
+        public DbSet<VendasPadaria.Models.ItemVenda> ItemVendas { get; set; } = default!;
+        //public DbSet<VendasPadaria.Models.Venda> Vendas { get; set; } = default!;
     }
 }

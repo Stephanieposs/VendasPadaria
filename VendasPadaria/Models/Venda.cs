@@ -2,33 +2,13 @@
 {
     public class Venda
     {
-        public int Id { get; set; }
-        public Produto Produto { get; set; }
-        public int ProdutoId { get; set; }
-        public int Quantidade { get; set; }
+        public int IdVenda { get; set; }
+        public IEnumerable<ItemVenda> Itens { get; set; }
 
-        public double Total;
-        private double total
-        {
-            get { return (Produto.preco * Quantidade); }
-            set
-            {
-                Total = value;
-            }
-        }
+        public DateTime Data { get; set; }
 
-        /*
-        public Venda(Produto produto, int quantidade)
-        {
-            Produto = produto;
-            Quantidade = quantidade;
-            
-        }
-        */
-
-        //public Vendas() { }
-
-        
+        public ClienteRegistrado Cliente { get; set; }
+        public int ClienteRegistradoId { get; set; }
 
     }
 }

@@ -3,6 +3,7 @@ using System.Globalization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using VendasPadaria.Data;
+using VendasPadaria.Models;
 
 namespace VendasPadaria
 {
@@ -27,6 +28,7 @@ namespace VendasPadaria
                 app.UseHsts();
             }
 
+            //Venda venda = new Venda();
 
             var defaultCulture = new CultureInfo("pt-BR");
             var localizationOptions = new RequestLocalizationOptions

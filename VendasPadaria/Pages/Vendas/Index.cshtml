@@ -1,42 +1,74 @@
 ﻿@page
-@model VendasPadaria.Pages.Vendas.IndexModel
-
+@using VendasPadaria.Pages.Venda
+@model IndexModel
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<!--
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+        select de clientes
+        select de produtos
+        espaço quantidade
+        adicionar 
+
+        depois adiciona na tabela
+
+        soma total 
+
+        botao finalizar -> da o save
+-->
+
+
+<!--
+<h2>Clientes</h2>
+<select asp-for="SelectedCliente" asp-items="Model.ClientesList" class="form-control">
+    <option value="">Selecione um Cliente</option>
+</select>
+
+<h2>Produtos</h2>
+<select asp-for="SelectedProduto" asp-items="Model.ProdutosList" class="form-control">
+    <option value="">Selecione um Produto</option>
+</select>
+
+-->
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Venda[0].Produto)
+                @Html.DisplayNameFor(model => model.Itens[0].Produto.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Venda[0].Quantidade)
+                @Html.DisplayNameFor(model => model.Itens[0].Quantidade)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Itens[0].Preco)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Venda) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Produto.Id)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantidade)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Itens)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Produto.Nome)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantidade)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Preco)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Produto.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
