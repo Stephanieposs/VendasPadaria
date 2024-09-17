@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using VendasPadaria.Models;
 
 namespace VendasPadaria.Pages.Venda
@@ -31,9 +32,18 @@ namespace VendasPadaria.Pages.Venda
 
             Itens = await _context.ItemVendas.ToListAsync();
 
-            //ProdutosList = await _context.Produto.ToListAsync();
+            
 
-            //ClientesList = await _context.ClienteRegistrado.ToListAsync();
+            // Popula a lista de clientes com a propriedade SelectListItem
+            ClientesList = await _context.ClienteRegistrado
+                .Select(c => new SelectListItem
+                {
+                    Value = c.Id.ToString(),
+                    Text = c.Nome + c.Cpf
+                }).ToListAsync();
+
+            // Popula a lista de produtos com a propriedade SelectListItem
+            ProdutosList = await _context.Produto.ToListAsync();
 
         }
 
@@ -41,14 +51,50 @@ namespace VendasPadaria.Pages.Venda
 
         // Propriedade para armazenar o cliente selecionado
         [BindProperty]
-        public string SelectedCliente { get; set; }
+        public int IdSelectedCliente { get; set; }
 
         // Propriedade para armazenar o produto selecionado
         [BindProperty]
-        public string SelectedProduto { get; set; }
+        public int IdSelectedProduto { get; set; }
 
+        public string Mensagem { get; set; }
+
+        [BindProperty]
+        public int Quantidade { get; set; }
         
         
+
+        public async Task<IActionResult> OnPostAdicionarAsync()
+        {
+            
+            if (IdSelectedCliente == 0 || IdSelectedProduto == 0|| Quantidade < 1)
+            {
+                Mensagem = "Selecione um cliente, um produto e informe uma quantidade válida.";
+                return Page();
+            }
+
+            var produto = await _context.Produto.FindAsync(IdSelectedProduto);
+
+            Mensagem = $"Cliente {IdSelectedCliente}, Produto {IdSelectedProduto}, Quantidade {Quantidade} foram adicionados.";
+
+            
+            Itens[IdSelectedProduto].Quantidade = Quantidade;
+
+            var novaVenda = new ItemVenda
+            {
+                
+                ProdutoId = produto.Id,
+                Quantidade = Quantidade,
+                Produto = produto
+            };
+
+            
+             _context.ItemVendas.Add(novaVenda);
+            await _context.SaveChangesAsync();
+
+
+            return Page();
+        }
 
     }
 }

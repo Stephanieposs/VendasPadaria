@@ -20,18 +20,33 @@
 -->
 
 
-<!--
-<h2>Clientes</h2>
-<select asp-for="SelectedCliente" asp-items="Model.ClientesList" class="form-control">
-    <option value="">Selecione um Cliente</option>
-</select>
+<!-- Formulário que vai enviar a ação para o back-end -->
+<form method="post">
+    <h3>Selecione um Cliente</h3>
+    <select asp-for="IdSelectedCliente" asp-items="Model.ClientesList" class="form-control">
+        <option value="">Selecione um Cliente</option>
+    </select>
 
-<h2>Produtos</h2>
-<select asp-for="SelectedProduto" asp-items="Model.ProdutosList" class="form-control">
-    <option value="">Selecione um Produto</option>
-</select>
+    <h3>Selecione um Produto</h3>
+    <select asp-for="IdSelectedProduto" asp-items="@(new SelectList(Model.ProdutosList, "Id", "Nome"))" class="form-control">
+        <option value="">Selecione um Produto</option>
+    </select>
 
--->
+    <!-- Input para a quantidade -->
+    <h3>Informe a Quantidade</h3>
+    <input asp-for="Quantidade" class="form-control" type="number" min="1" placeholder="Digite a quantidade" />
+
+    <!-- Botão de adicionar -->
+    <button type="submit" asp-page-handler="Adicionar" class="btn btn-primary mt-3">Adicionar</button>
+</form>
+
+<!-- Exibe uma mensagem de feedback ao usuário -->
+@if (!string.IsNullOrEmpty(Model.Mensagem))
+{
+    <div class="alert alert-info mt-3">
+        @Model.Mensagem
+    </div>
+}
 
 
 <table class="table">
@@ -44,7 +59,7 @@
                 @Html.DisplayNameFor(model => model.Itens[0].Quantidade)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Itens[0].Preco)
+                @Html.DisplayNameFor(model => model.Itens[0].Produto.preco)
             </th>
             <th></th>
         </tr>
@@ -60,10 +75,10 @@
                     @Html.DisplayFor(modelItem => item.Quantidade)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Preco)
+                    @Html.DisplayFor(modelItem => item.Produto.preco)
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Produto.Id">Edit</a> |
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
                     <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
