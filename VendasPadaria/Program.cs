@@ -30,7 +30,7 @@ namespace VendasPadaria
 
             //Venda venda = new Venda();
 
-            var defaultCulture = new CultureInfo("pt-BR");
+            var defaultCulture = new CultureInfo("en-US");
             var localizationOptions = new RequestLocalizationOptions
             {
                 DefaultRequestCulture = new RequestCulture(defaultCulture),
