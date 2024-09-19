@@ -5,13 +5,6 @@
     //ViewData["Title"] = "Index";
 }
 
-<!--
-        depois adiciona na tabela
-
-        soma total 
-
-        botao finalizar -> da o save
--->
 
 
 <!-- Formulário que vai enviar a ação para o back-end -->
@@ -34,15 +27,19 @@
     <button type="submit" asp-page-handler="Adicionar" class="btn btn-primary mt-3">Adicionar</button>
 </form>
 
-<!-- Exibe uma mensagem de feedback ao usuário -->
-@if (!string.IsNullOrEmpty(Model.Mensagem))
+<!-- Exibe uma mensagem de feedback ao usuário 
+if (!string.IsNullOrEmpty(Model.Mensagem))
 {
     <div class="alert alert-info mt-3">
-        @Model.Mensagem
+        Model.Mensagem
     </div>
-}
-<div class="container">
-    <!-- Verificar se TempData contém uma mensagem -->
+}-->
+
+
+
+
+<div class="container">     
+ <!-- Verificar se TempData contém uma mensagem -->
     @if (TempData["Mensagem"] != null)
     {
         <div class="alert alert-info" role="alert">
@@ -55,19 +52,19 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ItensList[0].Produto.Nome)
+                @Html.DisplayNameFor(model => model.ItemVendas[0].Produto.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ItensList[0].Quantidade)
+                @Html.DisplayNameFor(model => model.ItemVendas[0].Quantidade)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ItensList[0].Produto.preco)
+                @Html.DisplayNameFor(model => model.ItemVendas[0].Produto.preco)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.ItensList)
+        @foreach (var item in Model.ItemVendas)
         {
             <tr>
                 <td>
