@@ -10,9 +10,6 @@ namespace VendasPadaria.Pages.Vendas
 {
     public class IndexModel : PageModel
     {
-       
-
-        
         private readonly VendasPadaria.Data.VendasPadariaContext _context;
 
         public IndexModel(VendasPadaria.Data.VendasPadariaContext context)
@@ -20,29 +17,27 @@ namespace VendasPadaria.Pages.Vendas
                 _context = context;
         }
 
-        
-
         // Propriedades para armazenar as listas 
         public IList<Venda> Vendas { get; set; } = new List<Venda>();
-        public IList<ItemVenda> ItensList { get; set; } = new List<ItemVenda>();
+        public IList<ItemVenda> ItemVendas { get; set; } = new List<ItemVenda>();
         public IEnumerable<SelectListItem> ClientesList { get; set; } = default!;
         public IEnumerable<Produto> ProdutosList { get; set; } = default!;
 
         public async Task OnGetAsync()
         {
-            Venda vendaNew = new Venda();
-            Vendas.Add(vendaNew);
+            //Venda vendaNew = new Venda();
+            //Vendas.Add(vendaNew);
 
-            ItensList = await _context.ItemVendas.ToListAsync();
+            //ItensList = await _context.ItemVendas.ToListAsync();
+            ItemVendas = await _context.ItemVendas.ToListAsync() ?? new List<ItemVenda>();
 
-            
 
             // Popula a lista de clientes com a propriedade SelectListItem
             ClientesList = await _context.ClienteRegistrado
                 .Select(c => new SelectListItem
                 {
                     Value = c.Id.ToString(),
-                    Text = c.Nome + c.Cpf
+                    Text = c.Nome + " - Cpf: " + c.Cpf
                 }).ToListAsync();
 
             // Popula a lista de produtos com a propriedade SelectListItem
@@ -70,32 +65,58 @@ namespace VendasPadaria.Pages.Vendas
 
         public async Task<IActionResult> OnPostAdicionarAsync()
         {
-            
-            if (IdSelectedCliente == 0 || IdSelectedProduto == 0|| QuantidadeProd < 1)
+
+            if (IdSelectedCliente == 0 || IdSelectedProduto == 0 || QuantidadeProd < 1)
             {
                 Mensagem = "Selecione um cliente, um produto e informe uma quantidade válida.";
                 return Page();
             }
 
             var produto = await _context.Produto.FindAsync(IdSelectedProduto);
+            if (produto == null)
+            {
+                Mensagem = "Produto não encontrado.";
+                return Page();
+            }
 
-            
-            
-            var novoItem = new ItemVenda
+            /*
+            if (Vendas == null || Vendas.Count == 0)
+            {
+                Mensagem = "Nenhuma venda encontrada.";
+                return Page();
+            }   */
+
+            ItemVenda novoItem = new ItemVenda()
             {
                 //Id = ItensList.Count+1,
-                VendaId = Vendas[Vendas.Count-1].Id,
-                ProdutoId = IdSelectedProduto,
+                //VendaId = Vendas[Vendas.Count-1].Id,
+                Produto = produto,
+                ProdutoId = produto.Id,
+                //ProdutoId = IdSelectedProduto,
                 Quantidade = QuantidadeProd
-            }; 
+            };
 
-            
-            ItensList.Add(novoItem);
+
+            if (ItemVendas == null)
+            {
+                //throw new Exception("ItensList vazia");
+                ItemVendas = new List<ItemVenda>(); // Inicialize a lista se for nula
+            }
+            ItemVendas.Add(novoItem);
+
 
             _context.ItemVendas.Add(novoItem);
             await _context.SaveChangesAsync();
 
+            var cliente = await _context.ClienteRegistrado.FindAsync(IdSelectedCliente);
+            if (cliente == null)
+            {
+                Mensagem = "Cliente não encontrado.";
+                return Page();
+            }
+
             Mensagem = $"Cliente {IdSelectedCliente}, Produto {IdSelectedProduto}, Quantidade {QuantidadeProd} foram adicionados.";
+
 
             return Page();
         }
@@ -103,7 +124,7 @@ namespace VendasPadaria.Pages.Vendas
         // Finalizar venda
         public async Task<IActionResult> OnPostFinalizarAsync()
         {
-            if (ItensList.Count == 0 || IdSelectedCliente == 0)
+            if (ItemVendas.Count == 0 || IdSelectedCliente == 0)
             {
                 Mensagem = "Adicione itens à venda e selecione um cliente.";
                 return Page();
@@ -114,20 +135,20 @@ namespace VendasPadaria.Pages.Vendas
             {
                 ClienteRegistradoId = IdSelectedCliente,
                 Data = DateTime.Now,
+                //ItensList = ItensList,
                 //Itens = Itens,
                 //Id = Vendas.Count + 1
 
             };
 
-            //Vendas.Add[Vendas.Count]= 
-            Vendas[Vendas.Count].ClienteRegistradoId.Equals(IdSelectedCliente);
-            Vendas[Vendas.Count].Data.Equals(DateTime.Now);
+            //Vendas[Vendas.Count-1].ClienteRegistradoId = (IdSelectedCliente);
+            //Vendas[Vendas.Count-1].Data = (DateTime.Now);
 
-            _context.Vendas.Add(Vendas[Vendas.Count]); // Adicionar a venda no contexto
+            _context.Vendas.Add(novaVenda); // Adicionar a venda no contexto
             await _context.SaveChangesAsync(); // Salvar no banco
 
             // Limpar a lista de itens temporários
-            ItensList.Clear();
+            //ItensList.Clear();
             Mensagem = "Venda finalizada com sucesso!";
             return Page();
         }

@@ -3,7 +3,7 @@
     public class Venda
     {
         public int Id { get; set; }
-        public IEnumerable<ItemVenda> Itens { get; set; }
+        public IEnumerable<ItemVenda> ItensList { get; set; }
 
 
         public DateTime Data { get; set; }
