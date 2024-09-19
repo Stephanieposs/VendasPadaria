@@ -1,17 +1,11 @@
 ﻿@page
-@using VendasPadaria.Pages.Venda
+@using VendasPadaria.Pages.Vendas
 @model IndexModel
 @{
-    ViewData["Title"] = "Index";
+    //ViewData["Title"] = "Index";
 }
 
 <!--
-
-        select de clientes
-        select de produtos
-        espaço quantidade
-        adicionar 
-
         depois adiciona na tabela
 
         soma total 
@@ -34,7 +28,7 @@
 
     <!-- Input para a quantidade -->
     <h3>Informe a Quantidade</h3>
-    <input asp-for="Quantidade" class="form-control" type="number" min="1" placeholder="Digite a quantidade" />
+    <input asp-for="QuantidadeProd" class="form-control" type="number" min="1" placeholder="Digite a quantidade" />
 
     <!-- Botão de adicionar -->
     <button type="submit" asp-page-handler="Adicionar" class="btn btn-primary mt-3">Adicionar</button>
@@ -47,25 +41,33 @@
         @Model.Mensagem
     </div>
 }
-
+<div class="container">
+    <!-- Verificar se TempData contém uma mensagem -->
+    @if (TempData["Mensagem"] != null)
+    {
+        <div class="alert alert-info" role="alert">
+            @TempData["Mensagem"]
+        </div>
+    }
+</div>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Itens[0].Produto.Nome)
+                @Html.DisplayNameFor(model => model.ItensList[0].Produto.Nome)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Itens[0].Quantidade)
+                @Html.DisplayNameFor(model => model.ItensList[0].Quantidade)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Itens[0].Produto.preco)
+                @Html.DisplayNameFor(model => model.ItensList[0].Produto.preco)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Itens)
+        @foreach (var item in Model.ItensList)
         {
             <tr>
                 <td>
@@ -78,12 +80,15 @@
                     @Html.DisplayFor(modelItem => item.Produto.preco)
                 </td>
                 <td>
-                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                    <a asp-page="./Edit" asp-route-id="@item.Produto">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Produto">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Produto">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+<form method="post">
+    <button  type="submit" asp-page-handler="Finalizar" class="btn btn-primary mt-3">Finalizar</button>
+</form>

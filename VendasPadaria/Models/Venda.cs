@@ -2,8 +2,9 @@
 {
     public class Venda
     {
-        public int IdVenda { get; set; }
+        public int Id { get; set; }
         public IEnumerable<ItemVenda> Itens { get; set; }
+
 
         public DateTime Data { get; set; }
 
